@@ -3,6 +3,9 @@ package io.github.mezk.controller;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,8 +21,17 @@ public class CallbackController {
     private RabbitTemplate rabbitTemplate;
 
     @RequestMapping(value = "/callback", method = RequestMethod.GET)
-    public void callback(@RequestParam("rk") String routingKey) throws UnknownHostException {
-        rabbitTemplate.convertAndSend(routingKey, "Callback");
+    public void callback(
+        @RequestParam("rk") String routingKey,
+        @RequestParam("callbackType") String callbackType
+    ) throws UnknownHostException {
+        rabbitTemplate.convertAndSend(routingKey, (Object) "Callback", new MessagePostProcessor() {
+            @Override
+            public Message postProcessMessage(Message message) throws AmqpException {
+                message.getMessageProperties().setType("CallbackProcessor1");
+                return message;
+            }
+        });
     }
 
 }

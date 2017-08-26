@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.github.mezk.callbackprocessor.CallbackProcessor;
+import io.github.mezk.callbackprocessor.CallbackProcessorFactory;
+
 @Configuration
 public class RabbitListeners {
 
@@ -21,6 +24,9 @@ public class RabbitListeners {
     @Autowired
     private ConnectionFactory connectionFactory;
 
+    @Autowired
+    private CallbackProcessorFactory processorsFactory;
+
     @Bean
     public SimpleMessageListenerContainer messageListenerContainer1() throws UnknownHostException {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
@@ -29,7 +35,9 @@ public class RabbitListeners {
         container.setMessageListener(new MessageListener() {
             @Override
             public void onMessage(Message message) {
-                System.out.println(message.toString());
+                CallbackProcessor processor = processorsFactory
+                    .getProcessor(message.getMessageProperties().getType());
+                processor.process(message.toString());
             }
         });
         return container;
