@@ -32,12 +32,9 @@ public class RabbitListeners {
         final SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(hostname);
-        container.setMessageListener(new MessageListener() {
-            @Override
-            public void onMessage(Message message) {
-                processorsFactory.getProcessor(message.getMessageProperties().getType())
-                    .process(message.toString());
-            }
+        container.setMessageListener((MessageListener) message -> {
+            processorsFactory.getProcessor(message.getMessageProperties().getType())
+                .process(message.toString());
         });
         return container;
     }
