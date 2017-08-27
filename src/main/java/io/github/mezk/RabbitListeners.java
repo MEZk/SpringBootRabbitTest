@@ -28,16 +28,15 @@ public class RabbitListeners {
     private CallbackProcessorFactory processorsFactory;
 
     @Bean
-    public SimpleMessageListenerContainer messageListenerContainer1() throws UnknownHostException {
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+    public SimpleMessageListenerContainer messageListenerContainer() {
+        final SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(hostname);
         container.setMessageListener(new MessageListener() {
             @Override
             public void onMessage(Message message) {
-                CallbackProcessor processor = processorsFactory
-                    .getProcessor(message.getMessageProperties().getType());
-                processor.process(message.toString());
+                processorsFactory.getProcessor(message.getMessageProperties().getType())
+                    .process(message.toString());
             }
         });
         return container;

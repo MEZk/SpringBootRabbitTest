@@ -25,12 +25,9 @@ public class CallbackController {
         @RequestParam("rk") String routingKey,
         @RequestParam("callbackType") String callbackType
     ) throws UnknownHostException {
-        rabbitTemplate.convertAndSend(routingKey, (Object) "Callback", new MessagePostProcessor() {
-            @Override
-            public Message postProcessMessage(Message message) throws AmqpException {
-                message.getMessageProperties().setType("CallbackProcessor1");
-                return message;
-            }
+        rabbitTemplate.convertAndSend(routingKey, "Callback", message -> {
+            message.getMessageProperties().setType("CallbackProcessor1");
+            return message;
         });
     }
 

@@ -15,7 +15,7 @@ public class Application {
 
     @Bean
     public ServiceLocatorFactoryBean callbackProcessorsFactory() {
-        ServiceLocatorFactoryBean bean = new ServiceLocatorFactoryBean();
+        final ServiceLocatorFactoryBean bean = new ServiceLocatorFactoryBean();
         bean.setServiceLocatorInterface(CallbackProcessorFactory.class);
         return bean;
     }

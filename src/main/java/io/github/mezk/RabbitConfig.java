@@ -27,7 +27,7 @@ public class RabbitConfig {
 
     @Bean
     public ConnectionFactory connectionFactory() {
-        CachingConnectionFactory connectionFactory =
+        final CachingConnectionFactory connectionFactory =
             new CachingConnectionFactory("localhost");
         connectionFactory.setPort(8082);
         connectionFactory.setUsername("guest");

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 public class CallbackProcessor1 implements CallbackProcessor {
     @Override
     public void process(String callback) {
-        System.out.println("OrderListCallbackProcessor");
+        System.out.println("CallbackProcessor1 is processing callback");
     }
 }
